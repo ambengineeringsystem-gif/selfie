@@ -5,6 +5,19 @@ function makeRoomCode() {
 }
 
 function wsUrl() {
+  // If a signaling server URL is provided via ?signal=, use it (allows hosting static site on GitHub Pages)
+  const param = getParam('signal');
+  if (param) {
+    // allow passing either wss://... or https://... or host only; prefer given value
+    if (param.startsWith('ws://') || param.startsWith('wss://')) return param;
+    if (param.startsWith('http://') || param.startsWith('https://')) {
+      return (param.startsWith('https://') ? 'wss://' : 'ws://') + param.replace(/^https?:\/\//, '') + '/ws';
+    }
+    // otherwise treat as host
+    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+    return `${protocol}://${param}/ws`;
+  }
+
   const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
   return `${protocol}://${location.host}/ws`;
 }
