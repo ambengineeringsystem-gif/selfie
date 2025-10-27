@@ -26,7 +26,6 @@ const statusEl = document.getElementById('status');
 const remoteVideo = document.getElementById('remoteVideo');
 const takePhotoBtn = document.getElementById('takePhoto');
 const capturedDiv = document.getElementById('captured');
-const downloadLink = document.getElementById('downloadLink');
 
 let pc = null;
 let callerCandidatesRef = null;
@@ -99,12 +98,12 @@ async function connectCamera(name){
           onChildAdded(cameraCmdRef, s => {
             const cmd = s.val(); if(!cmd || !cmd.type) return;
             try{
-              if(cmd.type === 'downloadCaptured'){
+                      if(cmd.type === 'downloadCaptured'){
                 // download remote's captured image if present
                 const img = capturedDiv && capturedDiv.querySelector('img');
                 if(img && img.src){ const a = document.createElement('a'); a.href = img.src; a.download = 'viewer-capture-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); setStatus('Downloaded viewer image'); }
               }else if(cmd.type === 'nextShot'){
-                if(capturedDiv){ capturedDiv.innerHTML = ''; }
+                        if(capturedDiv){ capturedDiv.innerHTML = ''; try{ capturedDiv.style.display = 'none'; }catch(e){} }
                 setStatus('Ready for next shot');
               }
             }catch(e){ console.warn('cameraCommand handling failed', e); }
@@ -134,6 +133,7 @@ function restoreControlsUI(){
     if(hdr){ hdr.style.display = ''; hdr.classList.remove('hidden'); }
     if(pairByCodeEl){ pairByCodeEl.style.display = ''; pairByCodeEl.classList.remove('hidden'); }
     if(viewerEl){ viewerEl.style.display = 'none'; viewerEl.classList.add('hidden'); viewerEl.classList.remove('fullscreen'); }
+    try{ document.body.classList.remove('pairing-mode'); }catch(e){}
   }catch(e){ /* ignore */ }
 }
 
@@ -164,15 +164,16 @@ async function captureFrame(){
   // trash icon: clear viewer preview and request camera to ready next shot
   const trash = document.createElement('button'); trash.className = 'icon-btn trash'; trash.title = 'Reset for next shot'; trash.innerHTML = '🗑';
   trash.addEventListener('click', async ()=>{
-    try{ if(capturedDiv){ capturedDiv.innerHTML = ''; } setStatus('Ready for next shot');
+    try{ if(capturedDiv){ capturedDiv.innerHTML = ''; try{ capturedDiv.style.display = 'none'; }catch(e){} } setStatus('Ready for next shot');
   if(sessionId && db){ const cmdsRef = ref(db, 'sessions/' + sessionId + '/viewerCommands'); await push(cmdsRef, { type: 'nextShot', from: localViewerId, ts: Date.now() }); }
     }catch(e){ console.warn('remote trash failed', e); }
   });
   wrap.appendChild(trash);
 
   capturedDiv.appendChild(wrap);
-  // set download link as fallback (if present in UI)
-  try{ if(typeof downloadLink !== 'undefined' && downloadLink){ downloadLink.href = dataUrl; downloadLink.download = 'selfie.jpg'; downloadLink.style.display = 'inline-block'; downloadLink.textContent = 'Download photo'; } }catch(e){}
+  // ensure the captured container is visible and uses flex layout (overlayed in CSS)
+  try{ if(capturedDiv) capturedDiv.style.display = 'flex'; }catch(e){}
+  // downloads are handled via the overlay action buttons (heart icon). No inline anchor.
   setStatus('Photo captured');
   // Notify the camera to take a local photo as well (if session exists)
   try{
@@ -203,13 +204,18 @@ async function connectByCode(code){
     if(!val || !val.camera) return setStatus('Code not found or expired');
     // optionally consume the code so it can't be reused
     try{ await remove(ref(db, 'codes/' + code)); }catch(e){}
+    // leaving pairing-mode as we transition to the connection UI
+    try{ document.body.classList.remove('pairing-mode'); }catch(e){}
     connectCamera(val.camera);
   }catch(e){ console.warn('code lookup failed', e); setStatus('Lookup error'); }
 }
 codeConnectBtn && (codeConnectBtn.onclick = ()=> connectByCode((codeInput && codeInput.value||'').trim()));
 
 // Remote -> Camera actions
-// Removed UI buttons - camera-specific controls moved to overlay and channelled via viewerCommands/lastCommand
+// Note: download-on-camera button was removed from the UI. Camera download requests can still be
+// sent via the heart icon on captured images or other programmatic paths.
+// Note: the `nextShotOnCamera` control was removed from the UI. If needed, the viewer can still
+// request a next shot by pushing a `nextShot` lastCommand into the session path programmatically.
 
 // init
 if(!db){ setStatus('Firebase not configured.'); }
@@ -236,8 +242,10 @@ try{
       if(hdr) { hdr.classList.add('hidden'); hdr.style.display = 'none'; }
       if(viewerEl) { viewerEl.classList.add('hidden'); viewerEl.style.display = 'none'; }
 
-      // Reveal the pairing UI (only visible element)
+      // Reveal the pairing UI (only visible element) and enter pairing-mode
       if(pairByCode){ pairByCode.style.display = ''; pairByCode.classList.remove('hidden'); }
+      // Add a body class so CSS can force a plain background and hide other UI
+      try{ document.body.classList.add('pairing-mode'); }catch(e){}
       if(codeInputEl) codeInputEl.focus();
     });
   }

@@ -1,5 +1,13 @@
 :root{--bg:#071021;--card:#0b1220;--accent:#2dd4bf;--text:#e6eef6}
-body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071021,#081522);color:var(--text)}
+.html, body{margin:0}
+/* Use a solid dark-blue background (no gradient / no banding) */
+body{font-family:system-ui,Segoe UI,Roboto,Arial;background:#071021;color:var(--text)}
+
+/* Enforce a truly flat page background and remove faint translucent bands
+  which can come from low-opacity UI cards or shadowed overlays. */
+html, body { background: #071021; }
+.wrap, .controls, .center-area, .center-code, .preview, #preview, #preview.fullscreen, .captured { background: transparent !important; box-shadow: none !important; }
+
 .wrap{max-width:920px;margin:20px auto;padding:18px}
 h1{margin:0 0 8px}
 .controls{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;margin-bottom:12px}
@@ -21,7 +29,7 @@ button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);colo
 /* wrapper for captured image with overlay action icons */
 .captured-wrap{position:relative;display:inline-block}
 .captured-wrap .captured-img{max-width:94vw;max-height:60vh;border-radius:12px;display:block}
-.icon-btn{position:absolute;z-index:10002;border:0;background:rgba(0,0,0,0.45);color:#fff;padding:8px;border-radius:8px;cursor:pointer;font-size:18px}
+.icon-btn{position:absolute;z-index:10002;border:0;background:rgba(0,0,0,0.45);color:#fff;padding:8px;border-radius:8px;cursor:pointer;font-size:20px}
 .icon-btn.heart{right:12px;top:12px}
 .icon-btn.trash{left:12px;top:12px}
 .icon-btn:hover{background:rgba(0,0,0,0.6)}
@@ -39,7 +47,7 @@ button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);colo
 
 /* Centered full-screen area for the icon / generated code */
 .center-area{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none}
-.center-area .gen-icon{pointer-events:auto;cursor:pointer;max-width:220px;width:22vw;max-height:220px}
+.center-area .gen-icon{pointer-events:auto;cursor:pointer;max-width:260px;width:26vw;max-height:260px}
 .center-code{margin-top:12px;font-size:48px;line-height:1;color:var(--text);background:rgba(0,0,0,0.25);padding:12px 20px;border-radius:8px;letter-spacing:6px;display:none}
 
 @media (min-width:900px){
