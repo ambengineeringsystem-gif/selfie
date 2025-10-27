@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selfie — Viewer</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Viewer</h1>
+    <p class="lead">Open the camera's link or enter a room code to connect.</p>
+    <div class="panel">
+      <!-- Minimal UI: only place to paste the room key and join -->
+      <div class="room">
+        <label for="roomInput">Room code</label>
+        <div class="room-row">
+          <input id="roomInput" placeholder="Paste room key here" aria-label="Room code">
+          <button id="joinBtn" class="btn primary">Join</button>
+        </div>
+      </div>
+      <div class="hint">If you opened this from the camera's link the room will be filled automatically.</div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/viewer.js"></script>
+  </main>
+</body>
+</html>
