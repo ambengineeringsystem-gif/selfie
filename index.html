@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selfie Cam Launcher</title>
+  <style>
+    :root{font-family:Segoe UI, Roboto, Arial, sans-serif}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f5f7fb}
+    .container{width:min(680px,92vw);text-align:center;padding:36px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(20,30,60,0.08)}
+    h1{margin:0 0 18px;font-size:20px;color:#0b2540}
+    p{margin:0 0 24px;color:#446}
+    .buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .btn{appearance:none;border:0;padding:14px 22px;border-radius:10px;background:#0b66ff;color:#fff;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(11,102,255,0.12);transition:transform .08s ease,box-shadow .08s ease}
+    .btn.secondary{background:#0b2540}
+    .btn:active{transform:translateY(1px)}
+    .hint{margin-top:16px;color:#536170;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Selfie Cam Launcher</h1>
+    <p>Open the sample camera or remote UIs. Each button loads the corresponding folder's <code>index.html</code>.</p>
+
+    <div class="buttons">
+      <button class="btn" id="open-camera">Open camera</button>
+      <button class="btn secondary" id="open-remote">Open remote</button>
+    </div>
+
+    <div class="hint">Tip: If links don't open in your browser, open this file from a local web server or use the PowerShell command shown below.</div>
+  </div>
+
+  <script>
+    // Relative paths to the provided folders. These work when this file is opened from the workspace root or served by a web server.
+    const cameraPath = 'camera/index.html';
+    const remotePath = 'remote/index.html';
+
+    document.getElementById('open-camera').addEventListener('click', () => {
+      window.open(cameraPath, '_blank');
+    });
+
+    document.getElementById('open-remote').addEventListener('click', () => {
+      window.open(remotePath, '_blank');
+    });
+  </script>
+</body>
+</html>

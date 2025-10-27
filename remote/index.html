@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selfie Remote</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Small inline styles to keep the pairing card polished without editing external CSS -->
+  <style>
+    .pair-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(159,179,198,0.12);
+      padding: 12px 14px;
+      border-radius: 10px;
+      max-width: 420px;
+      box-shadow: 0 4px 10px rgba(6,30,40,0.06);
+      color: #eaf6fb;
+    }
+    .pair-row{display:flex;gap:8px;margin-top:8px}
+    .pair-row input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(159,179,198,0.12);background:transparent;color:inherit}
+    .pair-row button{padding:8px 12px;border-radius:8px;border:none;background:#4aa3d6;color:#022;cursor:pointer}
+    .pair-card label{font-weight:600;display:block;color:#cfeffb}
+    .hint{margin-top:8px;color:#9fb3c6;font-size:0.9em}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <div id="startScreen" aria-hidden="false">
+    <img id="startIcon" src="remote.png" alt="Open remote" />
+  </div>
+  <header>
+    <h1>Selfie Remote</h1>
+  </header>
+
+  <main>
+    <section id="controls">
+      <!-- Keep a visually-hidden status element so any scripts that query #status won't break -->
+      <div id="status" class="sr-only" aria-hidden="true">Initializing...</div>
+
+      <!-- Visible pairing UI (only this block should be shown in the controls area) -->
+      <div id="pairByCode" class="pair-card hidden" style="margin-top:10px;display:none">
+          <!-- Visible pairing UI (minimal: single input + round button) -->
+          <div class="pair-row">
+            <input id="codeInput" placeholder="Enter 4–6 character code" maxlength="6" />
+            <button id="codeConnect" title="Connect">➤</button>
+          </div>
+        </div>
+    </section>
+
+    <section id="viewer" class="hidden">
+      <div id="videoWrapper">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <!-- Overlay capture button on top of the video -->
+        <button id="takePhoto" class="shutter overlay-shutter" title="Take photo" aria-label="Take photo">
+          <!-- Inline SVG camera icon (keeps button crisp at any size) -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <path d="M12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" fill="currentColor"/>
+            <path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1z" fill="currentColor" opacity="0.95"/>
+          </svg>
+        </button>
+        <!-- captured preview will appear over the live video -->
+        <div id="captured"></div>
+      </div>
+      <div id="shutterRow">
+        <!-- capture button moved onto the video; download link removed from UI -->
+      </div>
+      <!-- captured preview will appear over the live video (inserted into #videoWrapper) -->
+    </section>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
