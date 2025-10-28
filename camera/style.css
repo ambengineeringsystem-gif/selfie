@@ -34,10 +34,10 @@ button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);colo
 .icon-btn.trash{left:12px;top:12px}
 .icon-btn:hover{background:rgba(0,0,0,0.6)}
 
-/* When preview is fullscreen, show captured image as an overlay above the video */
+/* When preview is fullscreen, show captured image as a centered overlay above the video */
 #preview.fullscreen{position:fixed;inset:0}
-#preview.fullscreen .captured{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:10001;margin-top:0}
-#preview.fullscreen .captured img{max-height:40vh;background:rgba(0,0,0,0.35);padding:8px;border-radius:8px}
+#preview.fullscreen .captured{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10001;margin:0}
+#preview.fullscreen .captured img{max-height:80vh;max-width:94vw;background:rgba(0,0,0,0.35);padding:8px;border-radius:8px}
 
 /* On narrow screens, make the preview fill the screen width and use a 16:9 box to avoid overflow */
 @media (max-width:600px){
@@ -47,7 +47,12 @@ button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);colo
 
 /* Centered full-screen area for the icon / generated code */
 .center-area{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;pointer-events:none}
-.center-area .gen-icon{pointer-events:auto;cursor:pointer;max-width:260px;width:26vw;max-height:260px}
+.center-area .gen-icon{pointer-events:auto;cursor:pointer;max-width:260px;width:26vw;height:26vw;max-height:260px;object-fit:contain}
+
+/* Increase launcher icon size on small screens for better tap targets */
+@media (max-width:600px){
+  .center-area .gen-icon{width:40vw;height:40vw;max-width:360px;max-height:360px}
+}
 .center-code{margin-top:12px;font-size:48px;line-height:1;color:var(--text);background:rgba(0,0,0,0.25);padding:12px 20px;border-radius:8px;letter-spacing:6px;display:none}
 
 @media (min-width:900px){
